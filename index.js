@@ -1,8 +1,3 @@
-/**
- *
- * TODO : try-catch all the replies, etc...
- *
- */
 const { Logger } = require("yalls");
 
 const { version } = require('./package.json');
