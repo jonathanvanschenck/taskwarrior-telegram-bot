@@ -11,12 +11,14 @@ const tw = new Taskwarrior(env.taskwarrior);
 const log = Logger.console();
 const bot = new Telegram(env.telegram, log.create_child("Bot"), tw);
 
-bot.launch();
-
-for ( const sig of ['SIGINT', 'SIGTERM'] ) {
-    process.once(sig, () => {
-        log.info(`Received ${sig}, stopping bot...`);
-        bot.stop(sig);
-    });
-}
+!async function main() {
+    await tw.init();
+    await bot.launch();
+    for ( const sig of ['SIGINT', 'SIGTERM'] ) {
+        process.once(sig, () => {
+            log.info(`Received ${sig}, stopping bot...`);
+            bot.stop(sig);
+        });
+    }
+}();
 
