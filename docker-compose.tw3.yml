@@ -8,6 +8,7 @@ services:
       - ./.tw3-test:/etc/task
     environment:
       - DB_DATA=/etc/task/botdb
+      - CRON_DATA=/etc/task/cron
       - TW_TASKDATA=/etc/task/taskdata
       - TW_TASKRC=/etc/task/taskrc
     env_file:

@@ -2,8 +2,16 @@
 
 A Telegram bot that provides a chat interface to [Taskwarrior](https://taskwarrior.org/), the command-line task management tool.
 
+
 [![GitHub Release](https://img.shields.io/github/v/release/jonathanvanschenck/taskwarrior-telegram-bot)](https://github.com/jonathanvanschenck/taskwarrior-telegram-bot/releases)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
+
+## Note from the author
+I really just made this for myself, to get push notifications and easy task creation on mobile, but hopefully you will find it useful too!
+
+This bot is still in early development and may have bugs or incomplete features. Use at your own risk, and feel free to contribute or report issues! Additionally, many features are still being worked on, so breaking changes may occur in the future.
+
+Additionally, I primarily use Taskwarrior 3, but I hope to maintain some compatibility with Taskwarrior 2 as well. If you encounter any issues specific to one version, please let me know.
 
 ## Features
 
@@ -36,6 +44,21 @@ A Telegram bot that provides a chat interface to [Taskwarrior](https://taskwarri
 | `TW_BIN` | No | Path to `task` binary (default: `task`) |
 | `TW_TASKRC` | No | Path to `.taskrc` |
 | `TW_TASKDATA` | No | Path to task data directory |
+| `CRON_DATA` | No | Path to the diretory for the `cron.json` file (if not set, cron will be disabled) |
+
+### Cron
+The bot can run scheduled commands using (Vixie) cron scheduling. To enable this feature, set the `CRON_DATA` environment variable to a directory where the bot can read a `cron.json` with the following format:
+```js
+[
+    {
+        "schedule": "*/5 * * * * *", // <- Vixie cron format with seconds field
+        "command": {
+            "type": "list",  // <- any method of the Taskwarrior class can be used here
+            "args": ["project:Work +mytag"] // <- array of arguments to pass to the method
+        }
+    }
+]
+```
 
 ### Docker
 
@@ -46,6 +69,7 @@ Pre-built images are available on GHCR for both Taskwarrior 2 and 3, on `amd64` 
 docker run -d \
   -e TELEGRAM_BOT_TOKEN=your-token \
   -e DB_DATA=/data/botdb \
+  -e CRON_DATA=/data/cron \
   -e TW_TASKRC=/data/taskrc \
   -e TW_TASKDATA=/data/taskdata \
   -v /path/to/taskdata:/data \
@@ -55,6 +79,7 @@ docker run -d \
 docker run -d \
   -e TELEGRAM_BOT_TOKEN=your-token \
   -e DB_DATA=/data/botdb \
+  -e CRON_DATA=/data/cron \
   -e TW_TASKRC=/data/taskrc \
   -e TW_TASKDATA=/data/taskdata \
   -v /path/to/taskdata:/data \
@@ -71,6 +96,7 @@ services:
       - ./taskdata:/data
     environment:
       - DB_DATA=/data/botdb
+      - CRON_DATA=/data/cron
       - TW_TASKDATA=/data/taskdata
       - TW_TASKRC=/data/taskrc
       - TELEGRAM_BOT_TOKEN=your-token
