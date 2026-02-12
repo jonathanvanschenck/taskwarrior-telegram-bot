@@ -38,16 +38,23 @@ Additionally, I primarily use Taskwarrior 3, but I hope to maintain some compati
 | Variable | Required | Description |
 |---|---|---|
 | `TELEGRAM_BOT_TOKEN` | Yes | Telegram bot API token |
-| `TELEGRAM_CHAT_ID` | No | Restrict bot to a specific chat |
+| `TELEGRAM_CHAT_ID` | No | Restrict bot to a specific chat. This is *highly* suggested, otherwise anyone can edit your tasks |
 | `TELEGRAM_USER_ID` | No | Restrict bot to a specific user |
-| `DB_DATA` | No | Path to directory for sqlite database (if not set, database will be created in memory) |
-| `TW_BIN` | No | Path to `task` binary (default: `task`) |
-| `TW_TASKRC` | No | Path to `.taskrc` |
-| `TW_TASKDATA` | No | Path to task data directory |
-| `CRON_DATA` | No | Path to the diretory for the `cron.json` file (if not set, cron will be disabled) |
+| `DB_DATA` | No | Path to directory for sqlite database, default is `$HOME/.ttb` (you can use ':memory:' to run in RAM, or set to empty string to turn the db off completely) |
+| `TW_BIN` | No | Path to `task` binary, default is `task` |
+| `TW_TASKRC` | No | Path to `.taskrc`, default is `$HOME/.task` |
+| `TW_TASKDATA` | No | Path to task data directory, default is `$HOME/.taskrc` |
+| `CRON_DATA` | No | Path to the diretory for the cron files (`*.json`) defualt is `$HOME/.ttb` |
+
+### Telegram Setup
+
+1. Create a new bot using [@BotFather](https://t.me/BotFather) and get the API token.
+2. (Highly recommended) Get your user ID using a bot like [@JsonDumpBot](https://t.me/JsonDumpBot).
+3. Set your environment variables, including `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and/or `TELEGRAM_USER_ID` to restrict access to the bot.
+4. Create a chat with your bot (or use an existing group chat) and send the `/start` command to register with the bot.
 
 ### Cron
-The bot can run scheduled commands using (Vixie) cron scheduling. To enable this feature, set the `CRON_DATA` environment variable to a directory where the bot can read a `cron.json` with the following format:
+The bot can run scheduled commands using (Vixie) cron scheduling. To enable this feature, put a `cron.json` (well, any json file, actually) in the `CRON_DATA` directory with the following format:
 ```js
 [
     {
@@ -68,21 +75,27 @@ Pre-built images are available on GHCR for both Taskwarrior 2 and 3, on `amd64` 
 # Taskwarrior 2
 docker run -d \
   -e TELEGRAM_BOT_TOKEN=your-token \
-  -e DB_DATA=/data/botdb \
-  -e CRON_DATA=/data/cron \
+  -e TELEGRAM_CHAT_ID=your-chat-id \
+  -e DB_DATA=/data/ttb \
+  -e CRON_DATA=/data/ttb \
   -e TW_TASKRC=/data/taskrc \
   -e TW_TASKDATA=/data/taskdata \
-  -v /path/to/taskdata:/data \
+  -v /path/to/taskdata:/data/taskdata \
+  -v /path/to/taskrc:/data/taskrc \
+  -v /path/to/backup:/data/ttb \
   ghcr.io/jonathanvanschenck/taskwarrior-telegram-bot:tw2-latest
 
 # Taskwarrior 3
 docker run -d \
   -e TELEGRAM_BOT_TOKEN=your-token \
-  -e DB_DATA=/data/botdb \
-  -e CRON_DATA=/data/cron \
+  -e TELEGRAM_CHAT_ID=your-chat-id \
+  -e DB_DATA=/data/ttb \
+  -e CRON_DATA=/data/ttb \
   -e TW_TASKRC=/data/taskrc \
   -e TW_TASKDATA=/data/taskdata \
-  -v /path/to/taskdata:/data \
+  -v /path/to/taskdata:/data/taskdata \
+  -v /path/to/taskrc:/data/taskrc \
+  -v /path/to/backup:/data/ttb \
   ghcr.io/jonathanvanschenck/taskwarrior-telegram-bot:tw3-latest
 ```
 
@@ -91,15 +104,19 @@ docker run -d \
 ```yaml
 services:
   bot:
-    image: ghcr.io/jonathanvanschenck/taskwarrior-telegram-bot:tw2-latest
+    image: ghcr.io/jonathanvanschenck/taskwarrior-telegram-bot:tw3-latest
     volumes:
-      - ./taskdata:/data
+      - /path/to/taskdata:/data/taskdata
+      - /path/to/taskrc:/data/taskrc
+      - ./cron:/data/ttb # <- put your cron json files in this directory
+      - ./backup:/data/db # <- this is where the sqlite db will be stored, if you choose to use it
     environment:
-      - DB_DATA=/data/botdb
-      - CRON_DATA=/data/cron
+      - CRON_DATA=/data/ttb
+      - DB_DATA=/data/db
       - TW_TASKDATA=/data/taskdata
       - TW_TASKRC=/data/taskrc
       - TELEGRAM_BOT_TOKEN=your-token
+      - TELEGRAM_CHAT_ID=your-chat-id
 ```
 
 ## Development
