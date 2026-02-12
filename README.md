@@ -46,6 +46,13 @@ Additionally, I primarily use Taskwarrior 3, but I hope to maintain some compati
 | `TW_TASKDATA` | No | Path to task data directory, default is `$HOME/.taskrc` |
 | `CRON_DATA` | No | Path to the diretory for the cron files (`*.json`) defualt is `$HOME/.ttb` |
 
+### Telegram Setup
+
+1. Create a new bot using [@BotFather](https://t.me/BotFather) and get the API token.
+2. (Highly recommended) Get your user ID using a bot like [@JsonDumpBot](https://t.me/JsonDumpBot).
+3. Set your environment variables, including `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and/or `TELEGRAM_USER_ID` to restrict access to the bot.
+4. Create a chat with your bot (or use an existing group chat) and send the `/start` command to register with the bot.
+
 ### Cron
 The bot can run scheduled commands using (Vixie) cron scheduling. To enable this feature, put a `cron.json` (well, any json file, actually) in the `CRON_DATA` directory with the following format:
 ```js
@@ -97,7 +104,7 @@ docker run -d \
 ```yaml
 services:
   bot:
-    image: ghcr.io/jonathanvanschenck/taskwarrior-telegram-bot:tw2-latest
+    image: ghcr.io/jonathanvanschenck/taskwarrior-telegram-bot:tw3-latest
     volumes:
       - /path/to/taskdata:/data/taskdata
       - /path/to/taskrc:/data/taskrc
