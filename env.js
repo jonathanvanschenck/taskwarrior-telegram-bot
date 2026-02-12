@@ -2,6 +2,9 @@
 require('dotenv').config({ quiet: true });
 
 module.exports = {
+    db: {
+        data: process.env.DB_DATA ?? undefined,
+    },
     taskwarrior: {
         bin: process.env.TW_BIN ?? undefined,
         taskrc: process.env.TW_TASKRC ?? undefined,

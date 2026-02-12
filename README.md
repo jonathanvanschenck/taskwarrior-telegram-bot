@@ -9,7 +9,8 @@ A Telegram bot that provides a chat interface to [Taskwarrior](https://taskwarri
 
 | Command | Description |
 |---|---|
-| `/start` | Welcome message |
+| `/start` | Register with the bot and receive a welcome message |
+| `/stop` | Unregister from the bot and stop receiving messages |
 | `/help` | Show available commands |
 | `/version` | Show bot and Taskwarrior versions |
 | `/list [filter]` | List tasks (with optional filter) |
@@ -18,7 +19,7 @@ A Telegram bot that provides a chat interface to [Taskwarrior](https://taskwarri
 | `/modify <id> <mods>` | Modify an existing task |
 | `/annotate <id> <text>` | Add an annotation to a task |
 | `/begin <id>` | Start a task |
-| `/stop <id>` | Stop a task |
+| `/end <id>` | Stop a task |
 | `/done <id>` | Mark a task as done |
 | `/delete <id>` | Delete a task |
 
@@ -31,6 +32,7 @@ A Telegram bot that provides a chat interface to [Taskwarrior](https://taskwarri
 | `TELEGRAM_BOT_TOKEN` | Yes | Telegram bot API token |
 | `TELEGRAM_CHAT_ID` | No | Restrict bot to a specific chat |
 | `TELEGRAM_USER_ID` | No | Restrict bot to a specific user |
+| `DB_DATA` | No | Path to directory for sqlite database (if not set, database will be created in memory) |
 | `TW_BIN` | No | Path to `task` binary (default: `task`) |
 | `TW_TASKRC` | No | Path to `.taskrc` |
 | `TW_TASKDATA` | No | Path to task data directory |
@@ -43,6 +45,7 @@ Pre-built images are available on GHCR for both Taskwarrior 2 and 3, on `amd64` 
 # Taskwarrior 2
 docker run -d \
   -e TELEGRAM_BOT_TOKEN=your-token \
+  -e DB_DATA=/data/botdb \
   -e TW_TASKRC=/data/taskrc \
   -e TW_TASKDATA=/data/taskdata \
   -v /path/to/taskdata:/data \
@@ -51,6 +54,7 @@ docker run -d \
 # Taskwarrior 3
 docker run -d \
   -e TELEGRAM_BOT_TOKEN=your-token \
+  -e DB_DATA=/data/botdb \
   -e TW_TASKRC=/data/taskrc \
   -e TW_TASKDATA=/data/taskdata \
   -v /path/to/taskdata:/data \
@@ -66,6 +70,7 @@ services:
     volumes:
       - ./taskdata:/data
     environment:
+      - DB_DATA=/data/botdb
       - TW_TASKDATA=/data/taskdata
       - TW_TASKRC=/data/taskrc
       - TELEGRAM_BOT_TOKEN=your-token
