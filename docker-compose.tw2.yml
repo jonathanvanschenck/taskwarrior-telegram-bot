@@ -1,0 +1,13 @@
+services:
+  bot:
+    build:
+      context: .
+      args:
+        TW_VERSION: "2"
+    volumes:
+      - ./.tw2-test:/etc/task
+    environment:
+      - TW_TASKDATA=/etc/task/taskdata
+      - TW_TASKRC=/etc/task/taskrc
+    env_file:
+      - .env

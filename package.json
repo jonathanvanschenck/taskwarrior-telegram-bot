@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:dev:tw2": "docker compose -f docker-compose.tw2.yml build",
+    "build:dev:tw3": "docker compose -f docker-compose.tw3.yml build",
+    "start:dev:tw2": "docker compose -f docker-compose.tw2.yml up",
+    "start:dev:tw3": "docker compose -f docker-compose.tw3.yml up"
   },
   "author": "",
   "license": "ISC",
