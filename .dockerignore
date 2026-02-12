@@ -1,3 +1,12 @@
 node_modules
 .env
 .git
+.tw2-test
+.tw3-test
+test.js
+docker-compose.*.yml
+CLAUDE.md
+Dockerfile
+README.md
+LICENSE
+.github

@@ -9,9 +9,9 @@
     "start:dev:tw2": "docker compose -f docker-compose.tw2.yml up",
     "start:dev:tw3": "docker compose -f docker-compose.tw3.yml up"
   },
-  "author": "",
+  "author": "Jonathan Van Schenck",
   "license": "ISC",
-  "description": "",
+  "description": "A Telegram bot that provides a chat interface to Taskwarrior",
   "dependencies": {
     "dotenv": "^17.2.4",
     "telegraf": "^4.16.3",
